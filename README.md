@@ -2,9 +2,9 @@
 
 📌 Project Overview
 
-This project uses SQL to analyze a film rental database and answer real-world business questions using relational data. The goal was to demonstrate how SQL can be used not just 
+This project uses SQL to analyze a film rental database and answer real-world business questions using relational data. 
 
-to retrieve data, but to analyze customer behavior, revenue patterns, and product performance in a structured business setting.
+The goal was to demonstrate how SQL can be used not just to retrieve data, but to analyze customer behavior, revenue patterns, and product performance in a structured business setting.
 
 This project simulates work done for a client in the entertainment / media rental industry, where understanding customer demand and revenue drivers is critical for decision-
 
