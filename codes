@@ -1,0 +1,100 @@
+SELECT title, description
+FROM 'film.csv' AS f
+INNER JOIN 'language.csv' AS l
+  ON f.language_id = l.language_id
+WHERE l.name IN ('Italian', 'French')
+  AND f.release_year = 2005;
+
+########################################
+
+SELECT first_name,
+	   last_name,
+      amount
+FROM 'payment.csv' AS p
+INNER JOIN 'customer.csv' AS c
+  ON p.customer_id = c.customer_id
+WHERE active = 'true'
+ORDER BY amount DESC;
+
+#######################################
+
+SELECT LOWER(title) AS title, 
+  rental_rate AS original_rate, 
+  rental_rate * 0.5 AS sale_rate 
+FROM 'film.csv'
+-- Filter for films prior to 2006
+WHERE release_year < 2006;
+
+######################################
+
+SELECT payment_date,
+  EXTRACT(DAY FROM STRPTIME(payment_date, '%m/%d/%y %H:%M')) AS payment_day,
+  EXTRACT(YEAR FROM STRPTIME(payment_date, '%m/%d/%y %H:%M')) AS payment_year,
+  EXTRACT(HOUR FROM STRPTIME(payment_date, '%m/%d/%y %H:%M')) AS payment_hour
+FROM 'payment.csv';
+
+######################################
+
+SELECT active, 
+       COUNT(payment_id) AS num_transactions, 
+       AVG(amount) AS avg_amount, 
+       SUM(amount) AS total_amount
+FROM read_csv_auto('payment.csv', types={'payment_id': 'VARCHAR'}) AS p
+INNER JOIN read_csv_auto('customer.csv') AS c
+  ON p.customer_id = c.customer_id
+GROUP BY active;
+
+#######################################
+
+SELECT name, 
+	STRING_AGG(title, ',') AS film_titles
+FROM 'film.csv' AS f
+INNER JOIN 'language.csv' AS l
+  ON f.language_id = l.language_id
+WHERE release_year = 2010
+  AND rating = 'G'
+GROUP BY name;
+
+########################################
+
+SELECT * 
+FROM read_csv_auto('payment.csv', types={'payment_id': 'VARCHAR'})
+ORDER BY amount DESC
+LIMIT 10;
+
+########################################
+
+-- Explore the tables and fill in the correct one
+SELECT * 
+FROM 'payment.csv'
+LIMIT 10;
+
+-- Prepare the result
+SELECT EXTRACT(MONTH FROM STRPTIME(payment_date, '%m/%d/%y %H:%M'))  AS month, 
+       SUM(amount) AS total_payment
+FROM 'payment.csv'  
+GROUP BY month;
+
+##########################################
+
+-- Calculate the average_length for each category
+SELECT category, 
+	   AVG(length) AS average_length
+FROM 'film.csv' AS f
+-- Join the tables film & category
+INNER JOIN 'category.csv' AS c
+  ON f.film_id = c.film_id
+GROUP BY category
+-- Sort the results in ascending order by length
+ORDER BY average_length;
+
+############################################
+
+SELECT f.title, COUNT(f.title) AS count
+FROM 'film.csv' AS f
+INNER JOIN 'inventory1.csv' AS i
+  ON f.film_id = i.film_id
+INNER JOIN 'rental.csv' AS r
+  ON i.inventory_id = r.rental_id
+GROUP BY f.title
+ORDER BY count DESC;
